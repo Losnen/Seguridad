@@ -11,8 +11,9 @@ class vernam_t
         
         string      mensaje_;
         string      clave_;
-        bitset<8>*       mensaje_binario_;
-        bitset<8>*       clave_binaria_;
+        bitset<8>*  mensaje_binario_;
+        bitset<8>*  clave_binaria_;
+        bitset<8>*  resultado_;    
         int         mb_sz_;
     
     public:
@@ -20,7 +21,7 @@ class vernam_t
         vernam_t(string mensaje);
         ~vernam_t(void);
         void StrToBin(string mensaje);
-        void StrToBin_clave(string mensaje1);
+        void StrToBin_clave(string mensaje);
         void StrRand(int sz);
         void cifrar(void);
         void descifrar(void);

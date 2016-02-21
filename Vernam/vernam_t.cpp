@@ -27,17 +27,17 @@ void vernam_t::StrToBin(string mensaje)
     
 }
 
-void vernam_t::StrToBin_clave(string mensaje1)
+void vernam_t::StrToBin_clave(string mensaje)
 {   
-    int sz = mensaje1.size();
+    int sz = mensaje.size();
 
-    bitset<8> aux1[sz];
+    bitset<8> aux[sz];
 
     clave_binaria_ = new bitset<8>[sz];
     for (std::size_t i = 0; i < sz; ++i)
     {
-        aux1[i] = bitset<8>(mensaje1.c_str()[i]);
-        clave_binaria_[i] = aux1[i];
+        aux[i] = bitset<8>(mensaje.c_str()[i]);
+        clave_binaria_[i] = aux[i];
         
     }
 }
@@ -68,8 +68,7 @@ void vernam_t::cifrar(void)
     {
         cout << mensaje_binario_[i] << " ";
     }
-    
-    
+
     StrRand(mb_sz_);
     cout << endl << "Clave: "<< clave_ << endl;
     StrToBin_clave(clave_);
@@ -86,6 +85,45 @@ void vernam_t::cifrar(void)
         bitset<8> aux = mensaje_binario_[i] ^ clave_binaria_[i];
         cout << aux << " ";
     }
+    cout << endl << "Resultado XOR en ASCII: ";
+    
+    resultado_ = new bitset<8>[mb_sz_];
+    for(int i = 0; i < mb_sz_; i++)
+    {
+        resultado_[i] = mensaje_binario_[i] ^ clave_binaria_[i];
+        long tochr = resultado_[i].to_ulong();
+        char a = tochr;
+        cout << a << " ";
+    }
     
     cout << endl;
 }
+
+
+void vernam_t::descifrar(void)
+{
+    cout << "Clave: "<< clave_ << endl;
+    cout << "Clave Binaria: " << endl;
+    for(int i = 0; i < mb_sz_; i++)
+    {
+        cout << clave_binaria_[i] << " ";
+    }
+    
+    cout << endl << "Resultado en ASCII: ";
+    for(int i = 0; i < mb_sz_; i++)
+    {
+        long tochr = resultado_[i].to_ulong();
+        char a = tochr;
+        cout << a << " ";
+    }
+    
+    cout << endl <<"Descifrando ";
+    for(int i = 0; i < mb_sz_; i++)
+    {
+        bitset<8> aux = resultado_[i] ^ clave_binaria_[i];
+        cout << aux << " ";
+    }
+     cout << endl << "Mensaje descifrado: " << mensaje_ << endl;
+
+}
+
