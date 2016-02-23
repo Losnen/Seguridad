@@ -6,7 +6,7 @@
 using namespace std;
 int main(void)
 {
-    vernam_t A("SOL");
+    vernam_t A("ATACAR MARTES 23 9:30 HORAS");
     
     int opcion = 9;
    	do

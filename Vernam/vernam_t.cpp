@@ -19,7 +19,7 @@ void vernam_t::StrToBin(string mensaje)
     for (std::size_t i = 0; i < sz; ++i)
     {
         aux[i] = bitset<8>(mensaje.c_str()[i]);
-        mensaje_binario_[i] = aux[i].to_ulong();
+        mensaje_binario_[i] = aux[i];
         
     }
 
@@ -69,8 +69,9 @@ void vernam_t::cifrar(void)
         cout << mensaje_binario_[i] << " ";
     }
 
-    StrRand(mb_sz_);
-    cout << endl << "Clave: "<< clave_ << endl;
+    //StrRand(mb_sz_);
+    entrada_clave();
+    cout << endl << clave_;
     StrToBin_clave(clave_);
     
     cout << "Clave Binaria: " << endl;
@@ -113,8 +114,16 @@ void vernam_t::descifrar(void)
     for(int i = 0; i < mb_sz_; i++)
     {
         long tochr = resultado_[i].to_ulong();
-        char a = tochr;
-        cout << a << " ";
+       
+        if ((tochr> 32) and (tochr<126))
+        {
+            char a = tochr;
+            cout << a << " ";
+        }
+        else
+        {
+            cout << "@" << " ";
+        }
     }
     
     cout << endl <<"Descifrando ";
@@ -127,3 +136,8 @@ void vernam_t::descifrar(void)
 
 }
 
+void vernam_t::entrada_clave(void)
+{
+    cout << "Introduzca la clave en forma de cadena: ";
+    cin >> clave_;
+}

@@ -25,5 +25,5 @@ class vernam_t
         void StrRand(int sz);
         void cifrar(void);
         void descifrar(void);
-        friend ostream& operator<<(ostream& os, const vernam_t& A);
+        void entrada_clave(void);
 };
