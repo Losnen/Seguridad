@@ -113,3 +113,27 @@ void vigenere_t::descifrar(void)
     
    cout << "Mensaje descifrado: " << r_descifrado_ << endl;
 }
+
+void vigenere_t::modificacion(void)
+{
+int j = 0;
+	while(j<clave_.size())
+	{
+		for(int i = 0; i<resultado_.size(); i++)
+		{
+			if(i % clave_.size() == j)
+			{
+				cout << resultado_[i];
+			}	
+		}
+	cout << endl;
+	j++;
+	}
+}
+
+
+
+
+
+
+

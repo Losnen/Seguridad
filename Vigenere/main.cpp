@@ -10,7 +10,7 @@ int main (void)
 	cout << "Práctica 2 SSI: Cifrado de Vigenere" << endl;
 	cout << "Introduzca la clave: " << endl;
 	cin >> clave;
-    vigenere_t A("ESTE MENSAJE SE AUTO DESTRUIRA",clave);
+    vigenere_t A("There are no secrets anymore",clave);
     
     int opcion = 9;
    	do
@@ -19,6 +19,7 @@ int main (void)
 	    cout << "MENU:" << endl;
 	    cout << "1. Cifrar" << endl;
 	    cout << "2. Descifrar" << endl;
+	    cout << "3. Modificación" << endl;
 	    cout << "0. Salir"<< endl;
 	    cout << "Introduzca una opción: ";
 	    cin >> opcion;
@@ -35,6 +36,9 @@ int main (void)
 	      case 2:
 	      	system("clear");
 	    	A.descifrar();
+	      break;
+	      case 3:
+		A.modificacion();
 	      break;
 	      default:
 	      	system("clear");

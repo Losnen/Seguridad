@@ -22,4 +22,5 @@ class vigenere_t
         void quitar_espacios(void);                 //Quita los espacios de la cadena
         void cifrar(void);                          //Cifra el mensaje según la formula: C = (M + k) mod n
         void descifrar(void);                       // Descifra el mensaje según la formula: DC = (C-K) + n*x 
+	void modificacion(void);
 };
