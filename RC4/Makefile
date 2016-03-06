@@ -1,7 +1,7 @@
 CXX=g++ 
 CXXFLAGS=-g
 
-OBJS = rc4.o main.o
+OBJS = RC4.o main.o
 
 all: ${OBJS}
 	$(CXX)  $(CXXFLAGS) -o rc4 ${OBJS}
