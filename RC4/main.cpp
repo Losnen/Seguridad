@@ -16,4 +16,9 @@ int main(void)
     A.PRGA();
     A.MyXOR();
     A.write();
+    
+    RC4_t B(clv, tex);
+    B.modificacion();
+    B.MyXOR();
+    B.write();
 }

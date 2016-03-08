@@ -80,6 +80,7 @@ void RC4_t::PRGA(void)
         
         clave_binario_[x] = S_[t];
     }
+    
 }
 
 
@@ -136,4 +137,31 @@ void RC4_t::write(void)
     }
   
     cout << endl;
+    
+    long toint = 0;
+    for (int i = 0; i<sz_m_; i++)
+    {
+        cout << "0x" << hex << resultado_binario_[i].to_ulong() << " ";
+    }
+    cout << endl;
+}
+
+void RC4_t::modificacion(void)
+{
+   int i = 0;
+   int j = 0;
+   int k = 1;
+   int t = 0;
+   int w = 5;
+   
+   for(int x = 0; x< sz_m_; x++)
+    {
+        i = (i + w) % 256;
+        j = ( k +S_[j + S_[i]]) % 256;
+        k = (i + k +S_[j]) % 256
+        swap(S_[i],S_[j]);
+        t = (S_[j + S_[i + S_[t + k]]) % 256;
+        
+        clave_binario_[x] = S_[t];
+    }
 }

@@ -29,4 +29,5 @@ class RC4_t
         void aBinario(void);                    //Pasa el mensaje a binario.
         void MyXOR(void);                       //Realiza un XOR entre el mensaje y la clave.
         void write(void);                       //Imprime el cifrado.
+        void modificacion(void);                //Modificación: Splitz
 };
