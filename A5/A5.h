@@ -18,28 +18,33 @@ class A5_t
 {
     private:
     
-        vector<int>     R1;                //Primer Registro
-        vector<int>     R2;                //Segundo Registro.
-        vector<int>     R3;                //Tercer Registro.
+        bitset<MAX1>     R1;                    //Primer Registro
+        bitset<MAX2>     R2;                    //Segundo Registro.
+        bitset<MAX3>     R3;                    //Tercer Registro.
+        bitset<1>*       resultado_;            //Secuencia resultante
+        int              sz_;                   //Número de bits a generar
         
     public:
     
-        A5_t(void);
+        A5_t(char* input, int sz);              //Constructor donde se inicializan los Registros a 0 y posteriormente se lee del fichero
         ~A5_t(void);
-        void leer_fichero(char fichero[]);  //Lectura de fichero 
+    
+        void generar(void);                     //Generador de secuencia.
+        void write(void);                       //Imprime la secuencia
         
-        int polinomio_1(void);              //Retorna el XOR con los valores del polinomio 1.
-        int polinomio_2(void);              //Retorna el XOR con los valores del polinomio 2.
-        int polinomio_3(void);              //Retorna el XOR con los valores del polinomio 3.
-        int z(void);                        //Retorna el XOR de las posiciones 0 de los polinomios 1,2 y 3.
+    private: 
+    
+        void leer_fichero(char* fichero);       //Lectura de fichero 
         
-        void desplazar_1(void);              //Desplaza el Registro 1.
-        void desplazar_2(void);              //Desplaza el Registro 2.
-        void desplazar_3(void);              //Desplaza el Registro 3.
+        bitset<1> polinomio_1(void);            //Retorna el XOR con los valores del polinomio 1.
+        bitset<1> polinomio_2(void);            //Retorna el XOR con los valores del polinomio 2.
+        bitset<1> polinomio_3(void);            //Retorna el XOR con los valores del polinomio 3.
+        bitset<1> z(void);                      //Retorna el XOR de las posiciones 0 de los polinomios 1, 2 y 3.
+        bitset<1> mayoria(void);                //Funcion que determina la mayoría
         
-        void iniciar_r1 (string cad);       //Inicia el Registro 1 con la lectura del fichero
-        void iniciar_r2 (string cad);       //Inicia el Registro 2 con la lectura del fichero
-        void iniciar_r3 (string cad);       //Inicia el Registro 3 con la lectura del fichero
+        void desplazar_1(void);                 //Desplaza el Registro 1.
+        void desplazar_2(void);                 //Desplaza el Registro 2.
+        void desplazar_3(void);                 //Desplaza el Registro 3.
         
-        
+
 };

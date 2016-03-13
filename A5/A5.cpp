@@ -1,28 +1,16 @@
 #include "A5.h"
 
-A5_t::A5_t(void)
+A5_t::A5_t(char* input, int sz):
+sz_(sz)
 {
-    for (int i = 0; i < MAX1; i++)
-    {
-        R1.push_back(0); 
-    }
-    
-    for (int i = 0; i < MAX2; i++)
-    {
-        R2.push_back(0);
-    }
-    
-    for (int i = 0; i < MAX3; i++)
-    {
-        R3.push_back(0);  
-    }
-     
+    resultado_ = new bitset<1> [sz_];
+    leer_fichero(input);                     //Leo del fichero y lo meto en cada registro
 }
 
 A5_t::~A5_t(void)
 {}
 
-void A5_t::leer_fichero(char fichero[])
+void A5_t::leer_fichero(char* fichero)
 {
     ifstream fich;
     fich.open(fichero);
@@ -34,13 +22,10 @@ void A5_t::leer_fichero(char fichero[])
         
         while (!fich.eof())
         {
-	        fich >> r_1;
-	        fich >> r_2;
-	        fich >> r_3;
+	        fich >> R1;
+	        fich >> R2;
+	        fich >> R3;
         }
-        iniciar_r1(r_1);
-        iniciar_r2(r_2);
-        iniciar_r3(r_3);
     }
     else
     {
@@ -49,76 +34,95 @@ void A5_t::leer_fichero(char fichero[])
     fich.close();
 }
 
-int A5_t::polinomio_1(void)
+bitset<1> A5_t::polinomio_1(void)
 {
-    return (R1[18] ^ R1[21] ^ R1[22]);
+    return (R1[18] ^ R1[17] ^ R1[16] ^ R1[13]);
 }
 
-int A5_t::polinomio_2(void)
+bitset<1> A5_t::polinomio_2(void)
 {
     return (R2[21] ^ R2[20]);
 }
 
-int A5_t::polinomio_3(void)
+bitset<1> A5_t::polinomio_3(void)
 {
     return (R3[22] ^ R3[21] ^ R3[20] ^ R3[7]);
 }
 
-int A5_t::z(void)
+bitset<1> A5_t::z(void)
 {
-    return (R1[0] ^ R2[0] ^ R3[0]);
+    return (R1[MAX1-1] ^ R2[MAX2-1] ^ R3[MAX3-1]);
 }
 
 void A5_t::desplazar_1(void)
 {
-    int aux = polinomio_1();
-    for (int i=0; i<MAX1; i++)
-    {
-        R1[i]=R1[i + 1];
-    }
-    R1[MAX1-1]= aux;
+    bitset<1> aux = polinomio_1();
+    R1<<=1;
+    R1[0] = aux[0];
 }
 
 void A5_t::desplazar_2(void)
 {
-    int aux = polinomio_2();
-    for (int i=0; i<MAX2; i++)
-    {
-        R2[i]=R2[i + 1];
-    }
-    R2[MAX2-1]= aux;
+    bitset<1> aux = polinomio_2();
+    R2<<=1;
+    R2[0] = aux[0];
 }
 
 void A5_t::desplazar_3(void)
 {
-    int aux = polinomio_3();
-    for (int i=0; i<MAX3; i++)
-    {
-        R3[i]=R3[i + 1];
-    }
-    R3[MAX3-1]= aux;
+    bitset<1> aux = polinomio_3();
+    R3<<=1;
+    R3[0] = aux[0];
 }
 
-void A5_t::iniciar_r1 (string cad)
+bitset<1> A5_t::mayoria(void)
 {
-    for (int i = 0; i < MAX1; i++)
+    return ((R1[8] * R2[10]) ^ (R1[8] * R3[10]) ^ (R2[10] * R3[10]));
+}
+
+void A5_t::generar(void)
+{
+    bitset<1> m;
+    bitset<1> rz;
+    
+    for(int i = 0; i< sz_; i++)
     {
-        R1[i] = cad[i] -'0';
+       
+        m = mayoria();
+        rz = z();
+        resultado_[i] = rz;
+        write();
+        if (m[0] == R1[8])
+        {
+	        desplazar_1();
+        }
+        if (m[0] == R2[10])
+        {
+	        desplazar_2();
+        }
+        if (m[0] == R3[10])
+        {
+            desplazar_3();
+        }
     }
 }
 
-void A5_t::iniciar_r2 (string cad)
+void A5_t::write(void)
 {
-    for (int i = 0; i < MAX2; i++)
+    cout << "Registro 1: ";
+    cout << R1 << endl;
+    
+    cout << "Registro 2: ";
+    cout << R2 << endl;
+    
+    cout << "Registro 3: ";
+    cout << R3 << endl;
+    
+    cout << "Resultado: ";
+    for(int i = 0; i< sz_; i++)
     {
-        R2[i] = cad[i] -'0';
+        cout << resultado_[i];
     }
-}
+    cout << endl;
 
-void A5_t::iniciar_r3 (string cad)
-{
-    for (int i = 0; i < MAX3; i++)
-    {
-        R3[i] = cad[i] -'0';
-    }
 }
