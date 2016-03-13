@@ -43,28 +43,41 @@ Semilla:
 ```
 
 ![iteracion1](images/img02.png)
+
 F(0,0,1) = 0 Registro tres queda paralizado
+
 z(t) = a(t) ⊕ b(t) ⊕ c(t) = 0
 
 ![iteracion2](images/img03.png)
+
 F(1,0,1) = 1 Registro dos queda paralizado
+
 z(t) = a(t) ⊕ b(t) ⊕ c(t) = 0
 
 ![iteracion3](images/img04a.png)
 ![iteracion3](images/img04b.png)
+
 F(1,0,1) = 1 Registro dos queda paralizado
+
 z(t) = a(t) ⊕ b(t) ⊕ c(t) = 1
 
+
 ![iteracion4](images/img05.png)
+
 F(0,0,1) = 0 Registro tres queda paralizado
+
 z(t) = a(t) ⊕ b(t) ⊕ c(t) = 1
 
 ![iteracion5](images/img06.png)
+
 F(1,0,1) = 1 Registro dos queda paralizado
+
 z(t) = a(t) ⊕ b(t) ⊕ c(t) = 1
 
 ![iteracion6](images/img07.png)
+
 F(0,0,0) = 0 Ningún registro queda paralizado
+
 z(t) = a(t) ⊕ b(t) ⊕ c(t) = 1
 
 
