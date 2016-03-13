@@ -4,6 +4,16 @@ A5_t::A5_t(char* input, int sz):
 sz_(sz)
 {
     resultado_ = new bitset<1> [sz_];
+    mensaje_ = new bitset<1> [sz_];
+    cifrado_ = new bitset<1> [sz_];
+    int m = 0;
+    for(int i = 0; i<sz_; i++)
+    {
+        cout << "introduzca el elemento " << i <<": ";
+        cin >> m;
+        mensaje_[i] = m;
+    }
+    
     leer_fichero(input);                     //Leo del fichero y lo meto en cada registro
 }
 
@@ -91,6 +101,7 @@ void A5_t::generar(void)
         m = mayoria();
         rz = z();
         resultado_[i] = rz;
+        cout << "Iteración: " << i << endl;
         write();
         if (m[0] == R1[8])
         {
@@ -104,6 +115,14 @@ void A5_t::generar(void)
         {
             desplazar_3();
         }
+    }
+}
+
+void A5_t::my_xor(void)
+{
+    for(int i = 0; i<sz_; i++)
+    {
+        cifrado_[i] = mensaje_[i] ^ resultado_[i]; 
     }
 }
 
@@ -124,5 +143,29 @@ void A5_t::write(void)
         cout << resultado_[i];
     }
     cout << endl;
+}
 
+void A5_t::resultado_xor(void)
+{
+    
+    cout << "Mensaje: ";
+    for(int i = 0; i< sz_; i++)
+    {
+        cout << mensaje_[i];
+    }
+    cout << endl;
+    
+    cout << "Clave: ";
+    for(int i = 0; i< sz_; i++)
+    {
+        cout << resultado_[i];
+    }
+    cout << endl;
+    
+    cout << "Resultado del XOR: ";
+    for(int i = 0; i< sz_; i++)
+    {
+        cout << cifrado_[i];
+    }
+    cout << endl;
 }

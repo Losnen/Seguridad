@@ -12,6 +12,8 @@ int main(int argc, char* argv[])
         
         A5_t A(input_file,sz);
         A.generar();
+        A.my_xor();
+        A.resultado_xor();
     }
     else
     {

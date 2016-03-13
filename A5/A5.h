@@ -18,11 +18,13 @@ class A5_t
 {
     private:
     
-        bitset<MAX1>     R1;                    //Primer Registro
-        bitset<MAX2>     R2;                    //Segundo Registro.
-        bitset<MAX3>     R3;                    //Tercer Registro.
-        bitset<1>*       resultado_;            //Secuencia resultante
-        int              sz_;                   //Número de bits a generar
+        bitset<MAX1>    R1;                     //Primer Registro
+        bitset<MAX2>    R2;                     //Segundo Registro.
+        bitset<MAX3>    R3;                     //Tercer Registro.
+        bitset<1>*      resultado_;             //Secuencia resultante
+        int             sz_;                    //Número de bits a generar
+        bitset<1>*      mensaje_;               //Mensaje a cifrar
+        bitset<1>*      cifrado_;               //Mensaje cifrado 
         
     public:
     
@@ -31,6 +33,9 @@ class A5_t
     
         void generar(void);                     //Generador de secuencia.
         void write(void);                       //Imprime la secuencia
+        
+        void my_xor(void);                      //XOR entre el mensaje y la clave
+        void resultado_xor(void);               //Imprime el resultado del XOR
         
     private: 
     
