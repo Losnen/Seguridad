@@ -21,6 +21,10 @@ class A5_t
         bitset<MAX1>    R1;                     //Primer Registro
         bitset<MAX2>    R2;                     //Segundo Registro.
         bitset<MAX3>    R3;                     //Tercer Registro.
+        bitset<MAX1>    R1m;                     //Primer Registro
+        bitset<MAX2>    R2m;                     //Segundo Registro.
+        bitset<MAX3>    R3m;                     //Tercer Registro.
+        bitset<64>      k;               
         bitset<1>*      resultado_;             //Secuencia resultante
         int             sz_;                    //Número de bits a generar
         bitset<1>*      mensaje_;               //Mensaje a cifrar
@@ -37,6 +41,9 @@ class A5_t
         void my_xor(void);                      //XOR entre el mensaje y la clave
         void resultado_xor(void);               //Imprime el resultado del XOR
         
+        void modificacion(void);
+        void mostrarmodificacion(void);
+        
     private: 
     
         void leer_fichero(char* fichero);       //Lectura de fichero 
@@ -50,6 +57,7 @@ class A5_t
         void desplazar_1(void);                 //Desplaza el Registro 1.
         void desplazar_2(void);                 //Desplaza el Registro 2.
         void desplazar_3(void);                 //Desplaza el Registro 3.
+        
         
 
 };

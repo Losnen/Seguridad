@@ -26,15 +26,16 @@ void A5_t::leer_fichero(char* fichero)
     fich.open(fichero);
     if (fich.is_open())
     {
-        string r_1;
-        string r_2;
-        string r_3;
         
         while (!fich.eof())
         {
 	        fich >> R1;
 	        fich >> R2;
 	        fich >> R3;
+	        fich >> R1m;
+	        fich >> R2m;
+	        fich >> R3m;
+	        fich >> k;
         }
     }
     else
@@ -168,4 +169,38 @@ void A5_t::resultado_xor(void)
         cout << cifrado_[i];
     }
     cout << endl;
+}
+
+void A5_t::modificacion(void)
+{
+
+    for(int i = 0; i<sz_; i++)
+    {
+        R1m[0] = (R1m[18] ^ R1m[17] ^ R1m[16] ^ R1m[13]) ^ k[i];
+        //cout << "R1: " << R1m[0]  << endl;
+        R1m<<=1;
+
+        R2m[0] = (R2m[21] ^ R2m[20]) ^ k[i];
+        //cout << "R2: " << R2m[0]  << endl;
+        R2m<<=1;
+      
+        R3m[0] = (R3m[22] ^ R3m[21] ^ R3m[20] ^ R3m[7]) ^ k[i];
+        //cout << "R3: " << R3m[0]  << endl;
+        R3m<<=1;
+
+    }
+}
+
+void A5_t::mostrarmodificacion(void)
+{
+    cout << "--------------- MODIFICACION -----------------" << endl;
+    cout << "Registro 1: ";
+    cout << R1m << endl;
+    
+    cout << "Registro 2: ";
+    cout << R2m << endl;
+    
+    cout << "Registro 3: ";
+    cout << R3m << endl;
+    
 }

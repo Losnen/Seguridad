@@ -14,6 +14,8 @@ int main(int argc, char* argv[])
         A.generar();
         A.my_xor();
         A.resultado_xor();
+        A.modificacion();
+        A.mostrarmodificacion();
     }
     else
     {
