@@ -23,7 +23,7 @@ class DH
         ~DH(void);
         
         void generador(void);
-        void exponenciacion_rapida(int base, int ex);
+        int exponenciacion_rapida(int base, int ex);
         
         friend ostream& operator<<(ostream& os);
         
