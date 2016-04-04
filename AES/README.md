@@ -99,9 +99,9 @@ Debe devolver:
 
 Ejemplo:
 
-Clave: 000102030405060708090a0b0c0d0e0f
+Clave: 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f
 
-Bloque de Texto Original: 00112233445566778899aabbccddeeff
+Bloque de Texto Original: 00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff
  
  R0 (Subclave = 000102030405060708090a0b0c0d0e0f) = 00102030405060708090a0b0c0d0e0f0
  
