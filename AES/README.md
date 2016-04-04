@@ -1,7 +1,5 @@
 #PRÁCTICA: RIJNDAEL (AES)
 
-##Samuel Ramos Barroso
-
 #Desarrollo:
 1.Implementa el cifrado en bloque para bloques y claves de 128 bits (que se representan como matrices de estado de 4x4 bytes):
 

@@ -1,8 +1,11 @@
 #include "AES.h"
 
-int main(void)
+int main (void)
 {
-    cout << "Práctica 5: AES (Advanced Encryption Standard) - Rijndael" << endl;
-    AES_t A;
-    A.write();
+    rijndael_t A;
+    
+    cout << "----------- PRÁCTICA 5 - IMPLEMENTACIÓN ALGORITMO RIJNDAEL -----------" << endl;
+    cout << endl;
+    
+    A.encryptionProcess();
 }

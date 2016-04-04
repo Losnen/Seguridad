@@ -1,13 +1,30 @@
 #include "AES.h"
 
-int AES_t::pos(int i, int j)
+rijndael_t::rijndael_t(void):
+iBlock_(),
+kBlock_(),
+intermediateState_(),
+oBlock_(),
+sBox_(),
+multMatrix_()
 {
-	return (i-1)*n_+j-1;
+    initialization();
 }
 
-bitset<8> AES_t::buscar(int a)
+rijndael_t::~rijndael_t(void)
 {
-    unsigned char s[256] = 
+    memoryRelease();
+}
+
+void rijndael_t::initialization(void)
+{
+    iBlock_ = new bitset<8> [TAM];
+    kBlock_ = new bitset<8> [TAM];
+    intermediateState_ = new bitset<8> [TAM];
+    oBlock_ = new bitset<8> [TAM];
+    string inputB, inputK;
+    
+    unsigned char s[256] =
     {
         0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
         0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
@@ -27,163 +44,344 @@ bitset<8> AES_t::buscar(int a)
         0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
     };
     
-    for(int i = 0; i < 256; i++)
+    unsigned char r[10] =
     {
-        scaja_[i] = s[i];
-    }
-    
-    return scaja_[a];
-}
-
-long AES_t::primero(bitset<8> a)
-{
-    bitset<4> aux;
-
-    for (int i = 0; i < 4; i++) 
-    {
-        aux[i] = a[i];
-    }
-    
-    return aux.to_ulong();
-}
-
-long AES_t::segundo(bitset<8> a)
-{
-    bitset<4> aux;
-
-    for (int i = 4; i < 8; i++) 
-    {
-        aux[i] = a[i];
-    }
-    
-    return aux.to_ulong();
-}
-
-AES_t::AES_t(void):
-estado_(NULL),
-clave_(NULL),
-scaja_(NULL),
-n_(4),
-m_(4)
-{
-    estado_ = new bitset<8> [m_ * n_];
-    clave_ = new bitset<8> [m_ * n_];
-    scaja_ = new bitset<8> [256]; 
-    
-    unsigned char estd[16] = 
-    {
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+        0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
     };
     
-    unsigned char clv[16] = 
+    for (int i = 0; i < 40; i++)
     {
-        0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
-    };
-    
-    for(int i = 0; i < 16; i++)
-    {
-        estado_[i] = estd[i];
-    }
-    
-    for(int i = 0; i < 16; i++)
-    {
-        clave_[i] = clv[i];
-    }
-    
-    cout << "Estado:" << endl;
-    for(int i = 0; i < 16; i++)
-    {
-        cout << "0x" << hex << estado_[i].to_ulong() <<" ";
-    }
-    
-    cout << endl;
-    cout << "Clave:" << endl;
-    for(int i = 0; i < 16; i++)
-    {
-        cout << "0x" << hex << clave_[i].to_ulong() <<" ";
-    }
-    
-    cout << endl;
-}
-
-AES_t::~AES_t(void)
-{}
-
-void AES_t::AddRoundKey(void)
-{
-    for (int i = 0; i < m_; i++) 
-    {
-        for (int j = 0; j < n_; j++) 
+        rCon_[i].reset();
+        if (i<10)
         {
-            estado_[pos(i,j)] = clave_[pos(i,j)] ^ estado_[pos(i,j)];
+            rCon_[i] = r[i];
         }
     }
 
-}
-
-void AES_t::SubBytes(void)
-{
-    bitset<8> b;
-    for (int i = 0; i < m_; i++) 
+    for (int i = 0; i < 256; i++)
     {
-        for (int j = 0; j < n_; j++) 
-        {
-            b = estado_[pos(i,j)];
-            long p = primero(b);
-            long s = segundo(b);
-            int post = pos(p,s);
-            estado_[pos(i,j)] = buscar(post);
-        }
+        sBox_[i] = s[i];
+    }
+    
+    multMatrix_[0] = 2; multMatrix_[1] = 3;
+    multMatrix_[2] = 1; multMatrix_[3] = 1;
+    multMatrix_[4] = 1; multMatrix_[5] = 2;
+    multMatrix_[6] = 3; multMatrix_[7] = 1;
+    multMatrix_[8] = 1; multMatrix_[9] = 1;
+    multMatrix_[10] = 2; multMatrix_[11] = 3;
+    multMatrix_[12] = 3; multMatrix_[13] = 1;
+    multMatrix_[14] = 1; multMatrix_[15] = 2;
+
+    unsigned char iB[TAM] =
+    {
+        0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34
+    };
+    unsigned char iK[TAM] =
+    {
+        0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c
+    };
+    
+    for (int i = 0; i < TAM; i++)
+    {
+        iBlock_[i] = iB[i];
+        kBlock_[i] = iK[i];
     }
 }
 
-void AES_t::ShiftRows(void)
+void rijndael_t::memoryRelease(void)
 {
-    bitset<8> copia;
+    delete [] iBlock_;
+    iBlock_ = NULL;
+    delete [] kBlock_;
+    kBlock_ = NULL;
+    delete [] intermediateState_;
+    intermediateState_ = NULL;
+    delete [] oBlock_;
+    oBlock_ = NULL;
+}
+
+int rijndael_t::pos(int i, int j, int n)
+{
+    return i*n+j;
+}
+
+void rijndael_t::addRoundKey(bitset<8> m1[TAM])
+{
+    for (int i = 0; i < TAM; i++)
+    {
+        intermediateState_[i] = m1[i] ^ kBlock_[i];
+    }
+    cout << endl;
     
-    copia = estado_[pos(1,0)];
-	estado_[pos(1,0)] = estado_[pos(1,1)];
-	estado_[pos(1,1)] = estado_[pos(1,2)];
-	estado_[pos(1,2)] = estado_[pos(1,3)];
-	estado_[pos(1,3)] = copia;
-	copia = estado_[pos(2,0)];
-	estado_[pos(2,0)] = estado_[pos(2,2)];
-	estado_[pos(2,2)] = copia;
-	copia = estado_[pos(2,1)];
-	estado_[pos(2,1)] = estado_[pos(2,3)];
-	estado_[pos(2,3)] = copia;
-	copia = estado_[pos(3,0)];
-	estado_[pos(3,0)] = estado_[pos(3,3)];
-	estado_[pos(3,3)] = estado_[pos(3,2)];
-	estado_[pos(3,2)] = estado_[pos(3,1)];
-	estado_[pos(3,1)] = copia;
-
+    cout << "Estado intermedio 1 (AddRoundKey): " << endl;
+    for (int i = 0; i < TAM/4; i++)
+    {
+        for (int j = 0; j < TAM/4; j++)
+        {
+            cout << hex << intermediateState_[pos(j,i,N)].to_ulong() << " ";
+        }
+        
+        cout << endl;
+    }
 }
 
-void AES_t::MixColumns(void)
+void rijndael_t::byteSub(bitset<8> m1[TAM])
 {
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            bitset<8> aux1;
+            bitset<4> left;
+            bitset<4> right;
+            
+            aux1 = m1[pos(j,i,N)];
+            istringstream bit_stream(aux1.to_string());
+            bit_stream >> left;
+            bit_stream >> right;
+            
+            m1[pos(j,i,N)] = sBox_[pos(left.to_ulong(),right.to_ulong(),S)];
+        }
+        
+    }
     
+    for (int i = 0; i < TAM; i++)
+    {
+        intermediateState_[i] = m1[i];
+    }
+    
+    cout << "Estado intermedio 2 (ByteSub): " << endl;
+    for (int i = 0; i < TAM/4; i++)
+    {
+        for (int j = 0; j < TAM/4; j++)
+        {
+            cout << hex << intermediateState_[pos(j,i,N)].to_ulong() << " ";
+        }
+        
+        cout << endl;
+    }
+    cout << endl;
 }
 
-void AES_t::Cifrar(void)
+void rijndael_t::shiftRow()
 {
-    AddRoundKey();                  //Primera iteracion    	
-	
-	for( int i = 1; i < 10; i++)    //10 Iteraciones
-	{
-		SubBytes(); 	
-		ShiftRows(); 	
-		MixColumns();	
-		AddRoundKey();
-	}	
-	
-                                        
-	SubBytes();                     //Última iteración
-	ShiftRows();
-	AddRoundKey();
+    int cnt = 0;
+    while(cnt < 4)
+    {
+        bitset<8> aux1, aux2, aux3;
+        if(cnt == 1)
+        {
+            aux1 = intermediateState_[pos(0,1,N)];
+            for (int i = 0; i < 3; i++)
+            {
+                intermediateState_[pos(i,1,N)] = intermediateState_[pos(i+1,1,N)];
+            }
+            intermediateState_[pos(3,1,N)] = aux1;
+        }
+        else if (cnt == 2)
+        {
+            aux1 = intermediateState_[pos(0,2,N)];
+            aux2 = intermediateState_[pos(1,2,N)];
+            for (int i = 0; i < 3; i++)
+            {
+                intermediateState_[pos(i,2,N)] = intermediateState_[pos(i+2,2,N)];
+            }
+            intermediateState_[pos(2,2,N)] = aux1;
+            intermediateState_[pos(3,2,N)] = aux2;
+        }
+        else if (cnt == 3)
+        {
+            aux1 = intermediateState_[pos(0,3,N)];
+            aux2 = intermediateState_[pos(1,3,N)];
+            aux3 = intermediateState_[pos(2,3,N)];
+            for (int i = 0; i < 3; i++)
+            {
+                intermediateState_[pos(i,3,N)] = intermediateState_[pos(i+3,3,N)];
+            }
+            intermediateState_[pos(1,3,N)] = aux1;
+            intermediateState_[pos(2,3,N)] = aux2;
+            intermediateState_[pos(3,3,N)] = aux3;
+        }
+        cnt++;
+    }
+    
+    cout << "Estado intermedio 3 (ShiftRow): " << endl;
+    for (int i = 0; i < TAM/4; i++)
+    {
+        for (int j = 0; j < TAM/4; j++)
+        {
+            cout << hex << intermediateState_[pos(j,i,N)].to_ulong() << " ";
+        }
+        
+        cout << endl;
+    }
+    cout << endl;
 }
 
-void AES_t::write(void)
+void rijndael_t::mixColumn(void)
 {
+    bitset<8> row[4];
+    bitset<8> a[4];
+    bitset<8> b[4];
+    bitset<8> h;
+    bitset<8> aux = 0x80;
+    bitset<8> aux2 = 0x1b;
+    
+    int i = 0;
+    
+    while(i < TAM/4)
+    {
+        for (int j = 0; j < TAM/4; j++)
+        {
+            row[j] = intermediateState_[pos(i,j,N)];
+            a[j] = row[j];
+            h = row[j] & aux;
+            b[j] = row[j] <<1;
+            if(h == aux)
+            {
+                b[j] ^= aux2;
+            }
+        }
 
+        for (int j = 0; j < TAM/4; j++)
+        {
+            if(j == 0)
+            {
+                intermediateState_[pos(i,j,N)] = b[0] ^ a[3] ^ a[2] ^ b[1] ^ a[1];
+            }
+            if(j == 1)
+            {
+                intermediateState_[pos(i,j,N)] = b[1] ^ a[0] ^ a[3] ^ b[2] ^ a[2];
+            }
+            if(j == 2)
+            {
+                intermediateState_[pos(i,j,N)] = b[2] ^ a[1] ^ a[0] ^ b[3] ^ a[3];
+            }
+            if(j == 3)
+            {
+                intermediateState_[pos(i,j,N)] = b[3] ^ a[2] ^ a[1] ^ b[0] ^ a[0];
+            }
+        }
+        i++;
+    }
+
+    cout << "Estado intermedio 4 (MixColumn): " << endl;
+    for (int i = 0; i < TAM/4; i++)
+    {
+        for (int j = 0; j < TAM/4; j++)
+        {
+            cout << hex << intermediateState_[pos(j,i,N)].to_ulong() << " ";
+        }
+        
+        cout << endl;
+    }
+    cout << endl;
+}
+
+void rijndael_t::keyExpansion(int inx)
+{
+    bitset<8> aux;
+    bitset<8> copykBlock[TAM];
+    bitset<8> newkBlock[TAM];
+    
+    for (int i = 0; i < TAM; i++)
+    {
+        copykBlock[i] = kBlock_[i];
+    }
+    
+    aux = copykBlock[pos(3,0,N)];
+    for (int i = 0; i < 3; i++)
+    {
+        copykBlock[pos(3,i,N)] = copykBlock[pos(3,i+1,N)];
+    }
+    copykBlock[pos(3,3,N)] = aux;
+    
+    for (int i = 0; i < 4; i++)
+    {
+        bitset<4> left;
+        bitset<4> right;
+            
+        aux = copykBlock[pos(3,i,N)];
+        istringstream bit_stream(aux.to_string());
+        bit_stream >> left;
+        bit_stream >> right;
+            
+        copykBlock[pos(3,i,N)] = sBox_[pos(left.to_ulong(),right.to_ulong(),S)];
+    }
+    for (int j = 0; j < TAM/4; j++)
+    {
+        newkBlock[pos(0,j,N)] = copykBlock[pos(0, j, N)] ^ copykBlock[pos(3, j, N)] ^ rCon_[pos(j, inx, R)];
+    }
+    
+    for (int i = 0; i < TAM/4; i++)
+    {
+        for (int j = 0; j < TAM/4; j++)
+        {
+            newkBlock[pos(i+1, j, N)] = newkBlock[pos(i, j, N)] ^ kBlock_[pos(i+1, j, N)];
+        }
+    }
+    
+    for (int i = 0; i < TAM; i++)
+    {
+        kBlock_[i] = newkBlock[i];
+    }
+    
+    cout << "Subclave 1: " << endl;
+    for (int i = 0; i < TAM/4; i++)
+    {
+        for (int j = 0; j < TAM/4; j++)
+        {
+            cout << hex << newkBlock[pos(j,i,N)].to_ulong() << " ";
+        }
+        
+        cout << endl;
+    }
+    cout << endl;
+}
+
+void rijndael_t::writeInput(void)
+{
+    cout << "----- INPUT ----------------------------------------------------------"<< endl;
+    cout << "|                                                                    |"<< endl;
+    cout << "| Bloque de entrada: ";
+    for (int i = 0; i < TAM; i++)
+    {
+        cout << hex << iBlock_[i].to_ulong() << " ";
+    }
+    cout << " |"<< endl;
+    cout << "| Clave:             ";
+    for (int i = 0; i < TAM; i++)
+    {
+        cout << hex << kBlock_[i].to_ulong() << " ";
+    }
+    cout << " |"<< endl;
+    cout << "|                                                                    |"<< endl;
+    cout << "----------------------------------------------------------------------"<< endl;
+    cout << endl;
+}
+
+void rijndael_t::encryptionProcess(void)
+{
+    writeInput();
+    addRoundKey(iBlock_);
+    
+    int cnt = 0;
+    
+    while (cnt < 9)
+    {
+        cout << cnt << endl;
+        
+        byteSub(intermediateState_);
+        shiftRow();
+        mixColumn();
+        keyExpansion(cnt);
+        addRoundKey(intermediateState_);
+        
+        cnt++;
+    }
+
+    byteSub(intermediateState_);
+    shiftRow();
+    keyExpansion(9);
+    addRoundKey(intermediateState_);
 }
