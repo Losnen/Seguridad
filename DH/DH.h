@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cmath>
 
 
 using namespace std;
@@ -23,6 +24,8 @@ class DH
         ~DH(void);
         
         void generador(void);
+        int calcular_y (int alp, int x, int m);
+        int calcular_k(int y, int x, int m);
         int exponenciacion_rapida(int base, int ex);
         
         friend ostream& operator<<(ostream& os);

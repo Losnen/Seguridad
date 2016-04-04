@@ -22,11 +22,23 @@ Yb(YB)
 
 ~DH(void)
 {}
-        
-void DH::generador(void)
+
+int calcular_y (int alp, int x, int m)
 {
-    
+    int y = 0;
+    int aux = exponenciacion_rapida(alp,x,m);
+    y = (aux % m);
+    return y;
 }
+
+int calcular_k(int y, int x, int m)
+{
+    int auxk = 0;
+    int aux = exponenciacion_rapida(y,x,m);
+    auxk = (aux % m);
+    return auxk;
+}
+
 int DH::exponenciacion_rapida(int base, int ex, int m)
 {
     int x = 1;
@@ -46,6 +58,11 @@ int DH::exponenciacion_rapida(int base, int ex, int m)
         }
     }
     return x;
+}
+
+void DH::generador(void)
+{
+    
 }
 
 ostream& operator<<(ostream& os)
