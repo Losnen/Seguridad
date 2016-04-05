@@ -72,7 +72,7 @@ int DH::get_yb(void)
 
 bool DH::es_primo(int primo)
 {
-    int a = 0;
+    int a = 0; 
     for(int i = 1; i <= primo; i++)
     {
         if(primo % i==0)
