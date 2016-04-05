@@ -22,11 +22,12 @@ class rijndael_t
         bitset<8>*  oBlock_;                    //Vector que simula una matriz y contiene el bloque de salida.
         bitset<8>   sBox_[256];                 //S-Caja.
         bitset<8>   multMatrix_[16];            //Matriz para multiplicación en MixColumn.
-        bitset<8>   rCon_[40];                  //Rijndael key schedule.
+        bitset<8>   rCon_[40];                  //Rijndael key schedule.s
         
     public:
     
         rijndael_t(void);
+        rijndael_t(bitset<8> texto[TAM]);
         ~rijndael_t(void);
         
         void addRoundKey(bitset<8> m1[TAM]);    //XOR entre el bloque de entrada y la clave original de cifrado.
@@ -37,6 +38,8 @@ class rijndael_t
         
         void writeInput(void);                  //Método que muestra por pantalla los datos de entrada.
         void writeProcess(void);                //Método que muestra por pantalla los resultados de las operaciones intermedias.
+        
+        bitset<8>* get_cifrado(void);
         
         void encryptionProcess(void);           //Método que controla el ciclo completo del algoritmo de Rijndael.
     private:

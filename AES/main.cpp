@@ -1,4 +1,5 @@
 #include "AES.h"
+#include "CBC.h"
 
 int main (void)
 {
@@ -8,4 +9,9 @@ int main (void)
     cout << endl;
     
     A.encryptionProcess();
+    CBC_t B;
+    
+    //B.generar();
+    
+    B.cipher_stealing();
 }

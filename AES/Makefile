@@ -1,7 +1,7 @@
 CXX=g++ 
 CXXFLAGS=-g
 
-OBJS = AES.o main.o
+OBJS = AES.o CBC.o main.o
 
 all: ${OBJS}
 	$(CXX)  $(CXXFLAGS) -o aes ${OBJS}
