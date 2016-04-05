@@ -10,8 +10,8 @@ int main(void)
     B.generador();
     C.generador();
     
-    cout << "Práctica 6 de SSI: Intercambio de claves de Diffie-Hellman" << endl << endl;
-    cout << "Primer ejemplo: " << A << endl << endl;
-    cout << "Pr ejemplo: " << B << endl << endl;
+    cout << "Práctica 6 de SSI: Intercambio de claves de Diffie-Hellman" << endl;
+    cout << "Primer ejemplo: " << A;
+    cout << "Segundo ejemplo: " << B;
     cout << "Tercer ejemplo: " << C;
 }

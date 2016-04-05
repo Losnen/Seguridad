@@ -20,7 +20,13 @@ Xa(XA),
 Xb(XB),
 Ya(0),
 Yb(0)
-{}
+{
+    if(!es_primo(p))
+    {
+        cout << "El número: " << p << " no es primo, por favor introduzcalo de nuevo: ";
+        cin >> p;
+    }
+}
 
 DH::~DH(void)
 {}
@@ -64,65 +70,53 @@ int DH::get_yb(void)
     return Yb;
 }
 
-int DH::calcular_y (int alp, int x, int m)
+bool DH::es_primo(int primo)
 {
-    int y = 0;
-    long aux = pow(alp,x);
-    cout << " alp= "  << alp << "X= "  << x << endl;
-    y = (aux % m);
-    return y;
+    int a = 0;
+    for(int i = 1; i <= primo; i++)
+    {
+        if(primo % i==0)
+            a++;
+    }
+
+    if(a == 2)
+    {
+        return true;
+    }
+    else
+    {
+        return false; 
+    }
 }
 
-int DH::calcular_k(int y, int x, int m)
+
+int DH::exponenciacion_rapida(int alfa, int x, int m)
 {
-    int k = 0;
-    long aux =  pow(y,x);
-    k = (aux % m);
-    return k;
+	int ex = 1;
+	int der = alfa;
+		
+	while(x > 0)
+	{
+		if(x % 2 != 0)
+		{
+			ex = (ex * der) % m;
+			x = x - 1;
+		}
+			
+		else
+		{
+			der = (der * der) % m;
+			x = x / 2;
+		}
+	}
+	return ex;
 }
-/*
-int DH::exponenciacion_rapida(int base, int ex, int m)
-{
-    int x = 1;
-    int y = base % m;
-    
-    while((ex > 0) && (y > 1))
-    {
-        if((ex % 2) == 0)
-        {
-            x = ((x * y) % m);
-            ex = (ex - 1); 
-        }
-        else
-        {
-            y = ((y * y) % m);
-            ex = (ex / 2);
-        }
-    }
-    return x;
-}*/
 
 void DH::generador(void)
 {
-    long double aux  = 0;
-    aux = pow(alpha,Xa);
-    cout << pow(alpha,Xa) << endl;
-    Ya = (aux % p);  
-    
-    aux = 0;
-    aux = pow(alpha,Xb);
-    cout << aux << endl;
-    Yb =  (aux % p);
- 
-    aux  = 0;
-    aux = pow(Yb, Xa);
-    cout << aux << endl;
-    Ka =  (aux % p);
-    
-    aux  = 0;
-    aux = pow(Ya, Xb);
-    cout << aux << endl;
-    Kb =  (aux % p);
+    Ya = exponenciacion_rapida(alpha,Xa,p);
+    Yb = exponenciacion_rapida(alpha,Xb,p);
+    Ka = exponenciacion_rapida(Yb,Xa,p);
 }
 
 ostream& operator<<(ostream& os, DH& a)

@@ -33,9 +33,8 @@ class DH
         int get_ya(void);
         int get_yb(void);
         
-        int calcular_y (int alp, int x, int m);
-        int calcular_k(int y, int x, int m);
-        int exponenciacion_rapida(int base, int ex);
+        bool es_primo(int primo);
+        int exponenciacion_rapida(int alp, int x, int m);
         void generador(void);
         
         friend ostream& operator<<(ostream& os, DH&);
