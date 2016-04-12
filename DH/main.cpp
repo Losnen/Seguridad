@@ -2,9 +2,8 @@
 
 int main(void)
 {
-    DH A(13,4,5,2);
-    DH B(43,23,25,33);
-    DH C(113,43,54,71);
+    DH A(2053,53,17,31);
+    DH B(1973,125,21,33);
     
     A.generador();
     B.generador();
