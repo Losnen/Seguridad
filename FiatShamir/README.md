@@ -23,6 +23,7 @@ Ejemplo 1:
 Ejemplo 2:
 
 1. Entrada:
+
 * p = 683, q = 811
 * s=43215
 * i=1 (número de iteraciones)
